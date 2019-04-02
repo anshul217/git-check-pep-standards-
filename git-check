@@ -1,0 +1,36 @@
+#!/bin/sh
+echo "\n================================================================="
+echo "||       **********git checker for pep standards***********      ||"
+echo "===================================================================\n"
+
+if  [[ $1 = "-h" ]]; then
+    echo "Usage guide"
+    echo "1. Use -d option to pass directory path for which you want to run the checker."
+    echo "2. Use -i option to pass additional pep error and warning codes which you want to ignore."
+    echo "3. Use -h option to get help."
+    echo "eg:- git check -d src/"
+    exit
+fi
+
+if  [[ $1 = "-i" ]]; then
+    IGNORE=$2
+elif [[ $3 = "-i" ]]; then
+	IGNORE=$4
+fi
+
+if  [[ $1 = "-d" && $2 != "" ]]; then
+    DIR=$2
+elif [[ $3 = "-d" && $4 != "" ]]; then
+	DIR=$4
+else
+    echo "Please specify source code directory eg: -d src/"
+    exit
+fi
+
+IGPARAM='W504,F403,E501,F401,F405'
+
+IGPARAM="$IGPARAM,$IGNORE"
+echo "processing..........\n"
+flake8 --ignore=$IGPARAM $DIR
+
+echo "Finished!!"
